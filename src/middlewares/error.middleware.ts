@@ -1,53 +1,27 @@
 import { ERROR_STATUS } from "@/constants/error";
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { IErrorHttps } from "@/interfaces/errors.interface";
 
-export const errorMiddleware = (
-  err: IErrorHttps,
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const errorMiddleware = (err: IErrorHttps, req: Request, res: Response) => {
   const statusCode = err.status || 500;
-
-  switch (statusCode) {
+  res.status(statusCode).json({
+    success: false,
+    title: getErrorTitle(statusCode),
+    message: err.message || "Internal Server Error",
+    stack: process.env.NODE_ENV === "production" ? null : err.stack,
+  });
+};
+const getErrorTitle = (status: number) => {
+  switch (status) {
     case ERROR_STATUS.VALIDATE_ERROR:
-      res.status(statusCode).json({
-        title: "Validateion Failed",
-        message: err.message,
-        stack: err.stack,
-      });
-      break;
-    case ERROR_STATUS.NOT_FOUND:
-      res.status(statusCode).json({
-        title: "Not Found",
-        message: err.message,
-        stack: err.stack,
-      });
-      break;
-    case ERROR_STATUS.INTERNAL_SERVER:
-      res.status(statusCode).json({
-        title: "Internal Server",
-        message: err.message,
-        stack: err.stack,
-      });
-      break;
+      return "Validation Failed";
     case ERROR_STATUS.UNAUTHORIZED:
-      res.status(statusCode).json({
-        title: "Unauthorized",
-        message: err.message,
-        stack: err.stack,
-      });
-      break;
+      return "Unauthorized";
     case ERROR_STATUS.FORBIDDEN:
-      res.status(statusCode).json({
-        title: "Forbidden",
-        message: err.message,
-        stack: err.stack,
-      });
-      break;
+      return "Forbidden";
+    case ERROR_STATUS.NOT_FOUND:
+      return "Not Found";
     default:
-      next();
-      break;
+      return "Internal Server Error";
   }
 };

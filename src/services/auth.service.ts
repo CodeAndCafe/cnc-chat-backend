@@ -5,6 +5,7 @@ import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from "@/configs/env";
 import { User } from "@/interfaces/users.interface";
 import { UserModel } from "@/models/user.model";
 import { HttpException } from "@/exceptions/httpException";
+import { IErrorHttps } from "@/interfaces/errors.interface";
 
 const generateAccessToken = (user: User) => {
   return jwt.sign(
@@ -82,7 +83,7 @@ export class AuthService {
     const userAvailable = await UserModel.findOne({
       where: { username },
     });
-    if (userAvailable) throw new HttpException(409, `This email ${username} was not found`);
+    if (!userAvailable) throw new HttpException(409, `This email ${username} was not found`);
     const isPasswordMatching = await bcrypt.compare(password, userAvailable.password);
     if (!isPasswordMatching) {
       throw new HttpException(409, "You're password not matching");
@@ -94,11 +95,17 @@ export class AuthService {
 
   //[POST]/Refresh token
   public refreshTokenService(refreshToken: string) {
-    let newAccessToken: string = null;
-    jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (err, decoded: User) => {
-      if (err) throw new HttpException(409, "No refresh token provided");
-      newAccessToken = generateAccessToken(decoded);
-    });
-    return { newAccessToken };
+    if (!refreshToken) {
+      throw new HttpException(401, "No refresh token provided");
+    }
+
+    try {
+      const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET) as User;
+      const newAccessToken = generateAccessToken(decoded);
+      return { newAccessToken };
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(403, "Invalid or expired refresh token");
+    }
   }
 }

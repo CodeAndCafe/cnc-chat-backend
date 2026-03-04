@@ -41,6 +41,7 @@ export const connectDatabase = async () => {
   try {
     await sequelize.authenticate();
     console.log("✅ PostgreSQL connected");
+    console.log(NODE_ENV);
 
     if (NODE_ENV === "development") {
       await sequelize.sync({ alter: true });
