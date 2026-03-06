@@ -82,6 +82,7 @@ export class AuthService {
     }
     const userAvailable = await UserModel.findOne({
       where: { username },
+      raw: true,
     });
     if (!userAvailable) throw new HttpException(409, `This email ${username} was not found`);
     const isPasswordMatching = await bcrypt.compare(password, userAvailable.password);

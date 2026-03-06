@@ -15,7 +15,6 @@ export class AuthController {
       await this.auth.registerService(userData);
       res.status(201).json({ status: 201, message: "successfully!" });
     } catch (error) {
-      res.status(400).json({ status: 400, message: "User data us not valid!" });
       next(error);
     }
   };
@@ -63,7 +62,6 @@ export class AuthController {
       res.clearCookie("isLoggedIn", { path: "/" });
       res.status(200).json({ status: 200, message: "Logged out successfully." });
     } catch (error) {
-      res.status(500).json({ status: 500, message: "Failed to log out." });
       next(error);
     }
   };

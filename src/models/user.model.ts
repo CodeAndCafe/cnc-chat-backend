@@ -93,8 +93,6 @@ UserModel.init(
     modelName: "User",
     tableName: "users",
     timestamps: true,
-    defaultScope: {
-      attributes: { exclude: ["password"] },
-    },
+    underscored: true,
   },
 );

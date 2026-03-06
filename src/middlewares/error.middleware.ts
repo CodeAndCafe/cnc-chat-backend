@@ -1,11 +1,17 @@
 import { ERROR_STATUS } from "@/constants/error";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { IErrorHttps } from "@/interfaces/errors.interface";
 
-export const errorMiddleware = (err: IErrorHttps, req: Request, res: Response) => {
+export const errorMiddleware = (
+  err: IErrorHttps,
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const statusCode = err.status || 500;
   res.status(statusCode).json({
     success: false,
+    status: statusCode,
     title: getErrorTitle(statusCode),
     message: err.message || "Internal Server Error",
     stack: process.env.NODE_ENV === "production" ? null : err.stack,
