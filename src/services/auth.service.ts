@@ -5,7 +5,6 @@ import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from "@/configs/env";
 import { User } from "@/interfaces/users.interface";
 import { UserModel } from "@/models/user.model";
 import { HttpException } from "@/exceptions/httpException";
-import { IErrorHttps } from "@/interfaces/errors.interface";
 
 const generateAccessToken = (user: User) => {
   return jwt.sign(

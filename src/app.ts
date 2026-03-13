@@ -6,6 +6,8 @@ import cors from "cors";
 import helmet from "helmet";
 import hpp from "hpp";
 import morgan from "morgan";
+import i18next from "@/plugins/i18n";
+import middleware from "i18next-http-middleware";
 import { errorMiddleware } from "./middlewares/error.middleware";
 import { SwaggerDocs } from "@/swagger";
 import { logger, stream } from "@/utils/logger";
@@ -24,6 +26,7 @@ export class App {
     this.port = Number(PORT) || 3000;
     this.initializeMiddlewares();
     this.initializeSwagger();
+    this.initializeI18next();
     this.initializeRoutes(routes);
     this.initializeErrorHandling();
   }
@@ -63,5 +66,9 @@ export class App {
 
   private initializeErrorHandling() {
     this.app.use(errorMiddleware);
+  }
+
+  private initializeI18next() {
+    this.app.use(middleware.handle(i18next));
   }
 }

@@ -7,8 +7,8 @@ export const {
   PORT,
   ACCESS_TOKEN_SECRET,
   REFRESH_TOKEN_SECRET,
-  LOG_DIR,
   LOG_FORMAT,
+  LOG_DIR,
   ORIGIN,
   HOST_NAME,
 } = process.env;
