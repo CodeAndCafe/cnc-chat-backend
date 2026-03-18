@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "lint-staged": "lint-staged",
-    "start": "npm run build && cross-env NODE_ENV=production node dist/server.js",
+    "start": "npm run build && cross-env NODE_ENV=develop node dist/server.js",
     "build": "tsc && tsc-alias",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch --inspect src/server.ts",

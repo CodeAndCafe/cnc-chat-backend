@@ -1,8 +1,11 @@
 import dotenv from "dotenv";
 import path from "path";
 
+// dotenv.config({
+//   path: path.resolve(process.cwd(), `.env.${process.env.NODE_ENV || "development"}.local`),
+// });
 dotenv.config({
-  path: path.resolve(process.cwd(), `.env.${process.env.NODE_ENV || "development"}.local`),
+  path: path.resolve(process.cwd(), `.env`),
 });
 
 export default {

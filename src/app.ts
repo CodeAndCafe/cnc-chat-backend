@@ -23,7 +23,7 @@ export class App {
   constructor(routes: IRoutes[]) {
     this.app = express();
     this.env = NODE_ENV || "development";
-    this.port = Number(PORT) || 3000;
+    this.port = Number(PORT) || 8888;
     this.initializeMiddlewares();
     this.initializeSwagger();
     this.initializeI18next();
@@ -31,10 +31,10 @@ export class App {
     this.initializeErrorHandling();
   }
   public listen() {
-    this.app.listen(this.port, this.hostName, () => {
+    this.app.listen(this.port, "0.0.0.0", () => {
       logger.info(`=================================`);
       logger.info(`======= ENV: ${this.env} =======`);
-      logger.info(`🚀 App listening on the port ${this.port}`);
+      logger.info(`🚀 App listening on the port ${this.port}, host ${this.hostName}`);
       logger.info(`=================================`);
     });
   }
