@@ -2,11 +2,11 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Service } from "typedi";
 import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from "@/configs/env";
-import { User } from "@/interfaces/users.interface";
+import { IUser } from "@/interfaces/users.interface";
 import { UserModel } from "@/models/user.model";
 import { HttpException } from "@/exceptions/httpException";
 
-const generateAccessToken = (user: User) => {
+const generateAccessToken = (user: IUser) => {
   return jwt.sign(
     {
       id: user.id,
@@ -18,7 +18,7 @@ const generateAccessToken = (user: User) => {
   );
 };
 
-const generateRefreshToken = (user: User) => {
+const generateRefreshToken = (user: IUser) => {
   return jwt.sign(
     {
       id: user.id,
@@ -32,7 +32,7 @@ const generateRefreshToken = (user: User) => {
 @Service()
 export class AuthService {
   // [POST]/register
-  public async registerService(userData: User) {
+  public async registerService(userData: IUser) {
     const { username, email, password, confirmPassword, fullName, dateOfBirth, avatarImageUrl } =
       userData;
 
@@ -74,7 +74,7 @@ export class AuthService {
   }
 
   // [POST]/Login
-  public async loginService(userData: User) {
+  public async loginService(userData: IUser) {
     const { username, password } = userData;
     if (!username || !password) {
       throw new HttpException(400, "All fields are mandatory!");
@@ -100,7 +100,7 @@ export class AuthService {
     }
 
     try {
-      const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET) as User;
+      const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET) as IUser;
       const newAccessToken = generateAccessToken(decoded);
       return { newAccessToken };
     } catch (error) {

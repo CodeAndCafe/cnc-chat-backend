@@ -8,7 +8,7 @@ dotenv.config({
 export default {
   development: {
     username: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD || "",
+    password: String(process.env.POSTGRES_PASSWORD || ""),
     database: process.env.POSTGRES_DB,
     host: process.env.POSTGRES_HOST,
     port: Number(process.env.POSTGRES_PORT),
@@ -16,7 +16,7 @@ export default {
   },
   production: {
     username: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD || "",
+    password: String(process.env.POSTGRES_PASSWORD || ""),
     database: process.env.POSTGRES_DB,
     host: process.env.POSTGRES_HOST,
     port: Number(process.env.POSTGRES_PORT),

@@ -1,6 +1,6 @@
 import { Container } from "typedi";
 import { NODE_ENV } from "@/configs/env";
-import { User } from "@/interfaces/users.interface";
+import { IUser } from "@/interfaces/users.interface";
 import { AuthService } from "@/services/auth.service";
 import { NextFunction, Request, Response } from "express";
 export class AuthController {
@@ -11,7 +11,7 @@ export class AuthController {
   // [POST]/register
   public register = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userData: User = req.body;
+      const userData: IUser = req.body;
       await this.auth.registerService(userData);
       res.status(201).json({ status: 201, message: "successfully!" });
     } catch (error) {
@@ -22,7 +22,7 @@ export class AuthController {
   // [POST]/Login
   public login = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userData: User = req.body;
+      const userData: IUser = req.body;
       const { userAvailable, accessToken, refreshToken } = await this.auth.loginService(userData);
       const isProduction = NODE_ENV === "production";
       // Set cookie HttpOnly

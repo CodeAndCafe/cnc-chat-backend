@@ -29,7 +29,6 @@ export const sequelize = new Sequelize({
   dialectOptions: {
     ssl: false,
   },
-
   define: {
     timestamps: true,
     underscored: true,

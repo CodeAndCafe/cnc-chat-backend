@@ -18,7 +18,7 @@ export class App {
   public app: express.Application;
   public env: string;
   public port: number;
-  public hostName: string = HOST_NAME || "localhost";
+  public hostName: string = HOST_NAME || "0.0.0.0";
 
   constructor(routes: IRoutes[]) {
     this.app = express();

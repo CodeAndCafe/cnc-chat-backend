@@ -1,5 +1,4 @@
 import { Container } from "typedi";
-import { User } from "@/interfaces/users.interface";
 import { II18nRequest } from "@/interfaces/i18n.interface";
 import { UserService } from "@/services/users.service";
 import { NextFunction, Request, Response } from "express";
