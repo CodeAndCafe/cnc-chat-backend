@@ -10,7 +10,7 @@ const generateAccessToken = (user: IUser) => {
   return jwt.sign(
     {
       id: user.id,
-      username: user.username,
+      user_name: user.user_name,
       email: user.email,
     },
     ACCESS_TOKEN_SECRET,
@@ -22,7 +22,7 @@ const generateRefreshToken = (user: IUser) => {
   return jwt.sign(
     {
       id: user.id,
-      username: user.username,
+      user_name: user.user_name,
       email: user.email,
     },
     REFRESH_TOKEN_SECRET,
@@ -33,41 +33,49 @@ const generateRefreshToken = (user: IUser) => {
 export class AuthService {
   // [POST]/register
   public async registerService(userData: IUser) {
-    const { username, email, password, confirmPassword, fullName, dateOfBirth, avatarImageUrl } =
-      userData;
-
+    const {
+      user_name,
+      email,
+      password,
+      confirm_password,
+      full_name,
+      date_of_birth,
+      avatar_image_url,
+    } = userData;
+    console.log(userData);
     if (
-      !username ||
+      !user_name ||
       !email ||
       !password ||
-      !confirmPassword ||
-      !fullName ||
-      !dateOfBirth ||
-      !avatarImageUrl
+      !confirm_password ||
+      !full_name ||
+      !date_of_birth ||
+      !avatar_image_url
     ) {
       throw new HttpException(400, "All fields are mandatory!");
     }
 
-    if (password !== confirmPassword) {
+    if (password !== confirm_password) {
       throw new HttpException(400, "Passwords do not match");
     }
 
     const userAvailable = await UserModel.findOne({
-      where: { username },
+      where: { user_name },
     });
 
     if (userAvailable) {
-      throw new HttpException(409, `Username ${username} already exists`);
+      throw new HttpException(409, `Username ${user_name} already exists`);
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
     const newUser = await UserModel.create({
-      username,
+      user_name,
       email,
       password: hashPassword,
-      fullName,
-      dateOfBirth,
-      avatarImageUrl,
+      confirm_password: hashPassword,
+      full_name,
+      date_of_birth,
+      avatar_image_url,
     });
 
     return newUser;
@@ -75,15 +83,15 @@ export class AuthService {
 
   // [POST]/Login
   public async loginService(userData: IUser) {
-    const { username, password } = userData;
-    if (!username || !password) {
+    const { user_name, password } = userData;
+    if (!user_name || !password) {
       throw new HttpException(400, "All fields are mandatory!");
     }
     const userAvailable = await UserModel.findOne({
-      where: { username },
+      where: { user_name },
       raw: true,
     });
-    if (!userAvailable) throw new HttpException(409, `This email ${username} was not found`);
+    if (!userAvailable) throw new HttpException(409, `This email ${user_name} was not found`);
     const isPasswordMatching = await bcrypt.compare(password, userAvailable.password);
     if (!isPasswordMatching) {
       throw new HttpException(409, "You're password not matching");

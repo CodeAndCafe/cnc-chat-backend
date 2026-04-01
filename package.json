@@ -18,9 +18,12 @@
     "migrate:generate": "npx ts-node src/generateMigration.ts",
     "migrate": "npx sequelize-cli db:migrate ",
     "migrate:undo": "npx sequelize-cli db:migrate:undo ",
-    "migrate:undo:all": "npx sequelize-cli db:migrate:undo:all "
+    "migrate:undo:all": "npx sequelize-cli db:migrate:undo:all ",
+    "seeder": "npx sequelize-cli db:seed:all",
+    "seeder:undo": "npx sequelize-cli db:seed:undo"
   },
   "dependencies": {
+    "@types/multer": "^2.1.0",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.3",
@@ -39,6 +42,7 @@
     "minio": "^8.0.7",
     "morgan": "^1.10.1",
     "multer": "^2.1.1",
+    "nodemailer": "^8.0.4",
     "pg": "^8.19.0",
     "pg-hstore": "^2.3.4",
     "reflect-metadata": "^0.2.2",

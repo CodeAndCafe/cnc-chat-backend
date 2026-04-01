@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 
 servers:
-  - url: http://localhost:8888/api/v1
+  - url: http://localhost:3000/api/v1
     description: Local
 
 paths:
@@ -112,25 +112,25 @@ components:
         id:
           type: number
           example: 123
-        username:
+        user_name:
           type: string
           example: "example"
         email:
           type: string
           example: "a@example.com"
-        fullName: 
+        full_name: 
           type: string
           example: "example"
-        dateOfBirth: 
+        date_of_birth: 
           type: date
           example: "example"
-        avatarImageUrl: 
+        avatar_image_url: 
           type: string
           example: "example"
         password: 
           type: string
           example: "example"
-        confirmPassword: 
+        confirm_password: 
           type: string
           example: "example"
 

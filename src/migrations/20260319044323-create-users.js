@@ -11,7 +11,7 @@ module.exports = {
         allowNull: false,
       },
 
-      username: {
+      user_name: {
         type: Sequelize.STRING(255),
         allowNull: false,
       },
@@ -23,6 +23,11 @@ module.exports = {
       },
 
       password: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+      },
+
+      confirm_password: {
         type: Sequelize.STRING(255),
         allowNull: false,
       },

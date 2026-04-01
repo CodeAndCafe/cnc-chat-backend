@@ -6,5 +6,9 @@ export class HttpException extends Error {
     super(message);
     this.status = status;
     this.message = message;
+    // Fix prototype chain (quan trọng trong TS)
+    Object.setPrototypeOf(this, new.target.prototype);
+    // Clean stack trace
+    Error.captureStackTrace(this, this.constructor);
   }
 }

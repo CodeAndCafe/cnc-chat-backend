@@ -1,4 +1,5 @@
 import { ERROR_STATUS } from "@/constants/error";
+import { NODE_ENV } from "@/configs/env";
 import { NextFunction, Request, Response } from "express";
 import { IErrorHttps } from "@/interfaces/errors.interface";
 
@@ -14,7 +15,7 @@ export const errorMiddleware = (
     status: statusCode,
     title: getErrorTitle(statusCode),
     message: err.message || "Internal Server Error",
-    stack: process.env.NODE_ENV === "production" ? null : err.stack,
+    stack: NODE_ENV === "production" ? null : err.stack,
   });
 };
 const getErrorTitle = (status: number) => {

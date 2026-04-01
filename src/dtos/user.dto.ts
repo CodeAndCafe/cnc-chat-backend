@@ -4,7 +4,7 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   @Length(9, 255)
-  public username: string;
+  public user_name: string;
 
   @IsEmail()
   @IsNotEmpty()
@@ -19,20 +19,20 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   @Length(9, 255)
-  public confirmPassword: string;
+  public confirm_password: string;
 
   @IsString()
   @IsNotEmpty()
   @Length(9, 255)
-  public fullName: string;
+  public full_name: string;
 
   @IsString()
   @IsNotEmpty()
   @Length(9, 255)
-  public dateOfBirth: string;
+  public date_of_birth: string;
 
   @IsString()
   @IsNotEmpty()
   @Length(9, 255)
-  public avatarImageUrl: string;
+  public avatar_image_url: string;
 }

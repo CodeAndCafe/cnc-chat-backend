@@ -7,12 +7,21 @@ import helmet from "helmet";
 import hpp from "hpp";
 import morgan from "morgan";
 import i18next from "@/plugins/i18n";
+import { minioClient } from "@/configs/minio";
 import middleware from "i18next-http-middleware";
 import { errorMiddleware } from "./middlewares/error.middleware";
 import { SwaggerDocs } from "@/swagger";
 import { logger, stream } from "@/utils/logger";
 import { IRoutes } from "@/interfaces/routes.interface";
-import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS, HOST_NAME } from "@/configs/env";
+import {
+  NODE_ENV,
+  PORT,
+  LOG_FORMAT,
+  ORIGIN,
+  CREDENTIALS,
+  HOST_NAME,
+  MINIO_BUCKET,
+} from "@/configs/env";
 
 export class App {
   public app: express.Application;
@@ -29,6 +38,7 @@ export class App {
     this.initializeI18next();
     this.initializeRoutes(routes);
     this.initializeErrorHandling();
+    this.initializeMinio();
   }
   public listen() {
     this.app.listen(this.port, this.hostName, () => {
@@ -70,5 +80,38 @@ export class App {
 
   private initializeI18next() {
     this.app.use(middleware.handle(i18next));
+  }
+
+  private async initializeMinio() {
+    try {
+      const bucket = MINIO_BUCKET || "uploads";
+
+      const exists = await minioClient.bucketExists(bucket);
+      if (!exists) {
+        await minioClient.makeBucket(bucket, "us-east-1");
+        console.log("Bucket created:", bucket);
+      } else {
+        console.log("Bucket exists:", bucket);
+      }
+
+      await minioClient.setBucketPolicy(
+        bucket,
+        JSON.stringify({
+          Version: "2012-10-17",
+          Statement: [
+            {
+              Effect: "Allow",
+              Principal: "*",
+              Action: ["s3:GetObject"],
+              Resource: [`arn:aws:s3:::${bucket}/*`],
+            },
+          ],
+        }),
+      );
+
+      console.log("Bucket policy set (public read)");
+    } catch (error) {
+      console.log("MinIO init error:", error);
+    }
   }
 }

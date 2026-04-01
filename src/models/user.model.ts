@@ -1,14 +1,14 @@
-import { Model, DataTypes, Sequelize, Optional } from "sequelize";
+import { Model, DataTypes, Sequelize } from "sequelize";
 
 export class UserModel extends Model {
   public id!: number;
-  public username!: string;
+  public user_name!: string;
   public email!: string;
   public password!: string;
-  public confirmPassword!: string;
-  public fullName!: string;
-  public dateOfBirth!: string;
-  public avatarImageUrl!: string;
+  public confirm_password!: string;
+  public full_name!: string;
+  public date_of_birth!: string;
+  public avatar_image_url!: string;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -23,7 +23,7 @@ export const initUserModel = (sequelize: Sequelize) => {
         primaryKey: true,
       },
 
-      username: {
+      user_name: {
         type: DataTypes.STRING(255),
         allowNull: false,
         validate: {
@@ -58,17 +58,27 @@ export const initUserModel = (sequelize: Sequelize) => {
         },
       },
 
-      fullName: {
+      confirm_password: {
         type: DataTypes.STRING(255),
         allowNull: false,
         validate: {
           notNull: {
-            msg: "please add the user fullName",
+            msg: "please add the user confirm password",
           },
         },
       },
 
-      dateOfBirth: {
+      full_name: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: "please add the user full name",
+          },
+        },
+      },
+
+      date_of_birth: {
         type: DataTypes.DATEONLY,
         allowNull: false,
         validate: {
@@ -78,12 +88,12 @@ export const initUserModel = (sequelize: Sequelize) => {
         },
       },
 
-      avatarImageUrl: {
+      avatar_image_url: {
         type: DataTypes.STRING(255),
         allowNull: false,
         validate: {
           notNull: {
-            msg: "please add the user date of birth",
+            msg: "please add the user avatar image url",
           },
         },
       },
