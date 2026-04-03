@@ -58,6 +58,15 @@ module.exports = {
         allowNull: false,
         defaultValue: Sequelize.NOW,
       },
+
+      reset_password_token: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+      },
+      reset_password_expires: {
+        type: Sequelize.DATE,
+        allowNull: true,
+      },
     });
 
     // 👇 add index (best practice)

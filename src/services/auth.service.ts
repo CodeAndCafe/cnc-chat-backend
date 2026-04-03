@@ -42,18 +42,6 @@ export class AuthService {
       date_of_birth,
       avatar_image_url,
     } = userData;
-    console.log(userData);
-    if (
-      !user_name ||
-      !email ||
-      !password ||
-      !confirm_password ||
-      !full_name ||
-      !date_of_birth ||
-      !avatar_image_url
-    ) {
-      throw new HttpException(400, "All fields are mandatory!");
-    }
 
     if (password !== confirm_password) {
       throw new HttpException(400, "Passwords do not match");
@@ -76,6 +64,8 @@ export class AuthService {
       full_name,
       date_of_birth,
       avatar_image_url,
+      reset_password_token: null,
+      reset_password_expires: null,
     });
 
     return newUser;
@@ -115,5 +105,23 @@ export class AuthService {
       console.error(error);
       throw new HttpException(403, "Invalid or expired refresh token");
     }
+  }
+
+  //[POST]/Change password
+  public async changePasswordService(userId: number, oldPassword: string, newPassword: string) {
+    const user = await UserModel.findByPk(userId);
+    if (!user) {
+      throw new HttpException(404, "User not found");
+    }
+
+    const isOldPasswordMatching = await bcrypt.compare(oldPassword, user.password);
+    if (!isOldPasswordMatching) {
+      throw new HttpException(400, "Old password is incorrect");
+    }
+
+    const hashNewPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashNewPassword;
+    user.confirm_password = hashNewPassword;
+    await user.save();
   }
 }

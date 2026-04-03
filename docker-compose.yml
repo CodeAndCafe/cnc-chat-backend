@@ -79,7 +79,7 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     ports:
-      - "3000:3000"
+      - "8888:8888"
     env_file:
       - .env.development.local
     environment:

@@ -2,6 +2,7 @@ import { config } from "dotenv";
 config({ path: `.env.${process.env.NODE_ENV || "development"}.local` });
 
 export const CREDENTIALS = process.env.CREDENTIALS === "true";
+// General
 export const {
   NODE_ENV,
   PORT,
@@ -12,8 +13,10 @@ export const {
   ORIGIN,
   HOST_NAME,
 } = process.env;
+// PostgreSQL
 export const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST, POSTGRES_PORT, POSTGRES_DB } =
   process.env;
+// Minio
 export const {
   MINIO_PORT,
   MINIO_HOST,
@@ -26,3 +29,5 @@ export const {
   MINIO_SECRET_KEY,
   MINIO_PUBLIC_URL,
 } = process.env;
+// Mail
+export const { MAIL_HOST, MAIL_PORT, MAIL_USER, MAIL_PASSWORD } = process.env;

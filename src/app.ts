@@ -28,6 +28,7 @@ export class App {
   public env: string;
   public port: number;
   public hostName: string = HOST_NAME || "0.0.0.0";
+  public bucket: string = MINIO_BUCKET || "uploads";
 
   constructor(routes: IRoutes[]) {
     this.app = express();
@@ -84,18 +85,16 @@ export class App {
 
   private async initializeMinio() {
     try {
-      const bucket = MINIO_BUCKET || "uploads";
-
-      const exists = await minioClient.bucketExists(bucket);
+      const exists = await minioClient.bucketExists(this.bucket);
       if (!exists) {
-        await minioClient.makeBucket(bucket, "us-east-1");
-        console.log("Bucket created:", bucket);
+        await minioClient.makeBucket(this.bucket, "us-east-1");
+        console.log("Bucket created:", this.bucket);
       } else {
-        console.log("Bucket exists:", bucket);
+        console.log("Bucket exists:", this.bucket);
       }
 
       await minioClient.setBucketPolicy(
-        bucket,
+        this.bucket,
         JSON.stringify({
           Version: "2012-10-17",
           Statement: [
@@ -103,7 +102,7 @@ export class App {
               Effect: "Allow",
               Principal: "*",
               Action: ["s3:GetObject"],
-              Resource: [`arn:aws:s3:::${bucket}/*`],
+              Resource: [`arn:aws:s3:::${this.bucket}/*`],
             },
           ],
         }),

@@ -88,4 +88,15 @@ export class AuthController {
       next(error);
     }
   };
+
+  //[POST]/Change password
+  public changePassword = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { userId, currentPassword, newPassword } = req.body;
+      await this.auth.changePasswordService(userId, currentPassword, newPassword);
+      res.status(200).json({ status: 200, message: "Password changed successfully." });
+    } catch (error) {
+      next(error);
+    }
+  };
 }

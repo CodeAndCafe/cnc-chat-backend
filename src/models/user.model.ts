@@ -9,7 +9,8 @@ export class UserModel extends Model {
   public full_name!: string;
   public date_of_birth!: string;
   public avatar_image_url!: string;
-
+  public reset_password_token!: string | null;
+  public reset_password_expires!: Date | null;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
@@ -96,6 +97,16 @@ export const initUserModel = (sequelize: Sequelize) => {
             msg: "please add the user avatar image url",
           },
         },
+      },
+
+      reset_password_token: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+
+      reset_password_expires: {
+        type: DataTypes.DATE,
+        allowNull: true,
       },
     },
     {

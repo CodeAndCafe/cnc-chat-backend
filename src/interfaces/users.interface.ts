@@ -7,4 +7,6 @@ export interface IUser {
   full_name: string;
   date_of_birth: string;
   avatar_image_url: string;
+  reset_password_token?: string | null;
+  reset_password_expires?: Date | null;
 }
