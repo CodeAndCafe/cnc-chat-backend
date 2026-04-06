@@ -1,6 +1,6 @@
 import { Container } from "typedi";
 import { NODE_ENV } from "@/configs/env";
-import { IUser } from "@/interfaces/users.interface";
+import { IRegisterUser, IUser } from "@/interfaces/users.interface";
 import { AuthService } from "@/services/auth.service";
 import { NextFunction, Request, Response } from "express";
 export class AuthController {
@@ -11,7 +11,7 @@ export class AuthController {
   // [POST]/register
   public register = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userData: IUser = req.body;
+      const userData: IRegisterUser = req.body;
       await this.auth.registerService(userData);
       res.status(201).json({ status: 201, message: "successfully!" });
     } catch (error) {
@@ -92,9 +92,31 @@ export class AuthController {
   //[POST]/Change password
   public changePassword = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { userId, currentPassword, newPassword } = req.body;
-      await this.auth.changePasswordService(userId, currentPassword, newPassword);
+      const { user_id, current_password, new_password } = req.body;
+      await this.auth.changePasswordService(user_id, current_password, new_password);
       res.status(200).json({ status: 200, message: "Password changed successfully." });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  //[POST]/Forgot password
+  public forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { email } = req.body;
+      await this.auth.forgotPasswordService(email);
+      res.status(200).json({ status: 200, message: "Password reset email sent successfully." });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  //[POST]/Reset password
+  public resetPassword = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { token, newPassword } = req.body;
+      await this.auth.resetPasswordService(token, newPassword);
+      res.status(200).json({ status: 200, message: "Password reset successfully." });
     } catch (error) {
       next(error);
     }

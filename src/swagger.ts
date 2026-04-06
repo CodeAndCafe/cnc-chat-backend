@@ -12,14 +12,24 @@ export const SwaggerDocs = (app: express.Application) => {
     swaggerUi.setup(null, {
       explorer: true, // bật chọn definition
       swaggerOptions: {
-        urls: [{ url: "/swagger/user.json", name: "User API" }],
+        urls: [
+          { url: "/swagger/user.json", name: "User API" },
+          { url: "/swagger/upload.json", name: "Upload API" },
+        ],
       },
     }),
   );
 
   //Docs in JSON format
+  // User API docs
   app.use("/swagger/user.json", (req: Request, res: Response) => {
     res.setHeader("Content-Type", "application/json");
     res.send(userSpec);
+  });
+  // Upload API docs
+  const uploadSpec = yaml.load("./src/docs/upload.yaml");
+  app.use("/swagger/upload.json", (req: Request, res: Response) => {
+    res.setHeader("Content-Type", "application/json");
+    res.send(uploadSpec);
   });
 };

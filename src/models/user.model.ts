@@ -5,7 +5,6 @@ export class UserModel extends Model {
   public user_name!: string;
   public email!: string;
   public password!: string;
-  public confirm_password!: string;
   public full_name!: string;
   public date_of_birth!: string;
   public avatar_image_url!: string;
@@ -55,16 +54,6 @@ export const initUserModel = (sequelize: Sequelize) => {
         validate: {
           notNull: {
             msg: "please add the user password",
-          },
-        },
-      },
-
-      confirm_password: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-        validate: {
-          notNull: {
-            msg: "please add the user confirm password",
           },
         },
       },

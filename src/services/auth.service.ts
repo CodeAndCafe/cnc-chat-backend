@@ -1,10 +1,12 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Service } from "typedi";
-import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from "@/configs/env";
-import { IUser } from "@/interfaces/users.interface";
+import { transporter } from "@/configs/mail";
 import { UserModel } from "@/models/user.model";
 import { HttpException } from "@/exceptions/httpException";
+import { IUser, IRegisterUser } from "@/interfaces/users.interface";
+import { generateRandomToken } from "@/utils/crypto";
+import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET, CLIENT_URL } from "@/configs/env";
 
 const generateAccessToken = (user: IUser) => {
   return jwt.sign(
@@ -32,7 +34,7 @@ const generateRefreshToken = (user: IUser) => {
 @Service()
 export class AuthService {
   // [POST]/register
-  public async registerService(userData: IUser) {
+  public async registerService(userData: IRegisterUser) {
     const {
       user_name,
       email,
@@ -60,7 +62,6 @@ export class AuthService {
       user_name,
       email,
       password: hashPassword,
-      confirm_password: hashPassword,
       full_name,
       date_of_birth,
       avatar_image_url,
@@ -121,7 +122,52 @@ export class AuthService {
 
     const hashNewPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashNewPassword;
-    user.confirm_password = hashNewPassword;
     await user.save();
+  }
+
+  //[POST]/Forgot password
+  async forgotPasswordService(email: string) {
+    const user = await UserModel.findOne({ where: { email } });
+    if (!user) {
+      throw new HttpException(404, "User not found");
+    }
+    const token = generateRandomToken();
+    user.reset_password_token = token;
+    user.reset_password_expires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+    await user.save();
+    const resetLink = `${CLIENT_URL}/reset-password?token=${token}`;
+    await transporter.sendMail({
+      to: email,
+      subject: "Reset Password",
+      html: `
+        <h3>Reset Password</h3>
+        <p>Click vào link dưới:</p>
+        <a href="${resetLink}">${resetLink}</a>
+      `,
+    });
+
+    return true;
+  }
+
+  //[POST]/Reset password
+  async resetPasswordService(token: string, newPassword: string) {
+    const user = await UserModel.findOne({
+      where: { reset_password_token: token },
+    });
+    if (!user) {
+      throw new HttpException(404, "Invalid or expired reset token");
+    }
+
+    if (!user.reset_password_expires || user.reset_password_expires < new Date()) {
+      throw new HttpException(404, "Token expired");
+    }
+
+    const hashNewPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashNewPassword;
+    user.reset_password_token = null;
+    user.reset_password_expires = null;
+    await user.save();
+
+    return true;
   }
 }

@@ -46,12 +46,6 @@
 | Username             | postgres |
 | Password             | password |
 
-## ▶️ Run Project
-
-```bash
-docker-compose up -d --build
-```
-
 ## 🐳 Quick Start
 
 The easiest way to initialize the required services (PostgreSQL, pgAdmin, and MinIO) is using Docker Compose.
@@ -59,6 +53,9 @@ The easiest way to initialize the required services (PostgreSQL, pgAdmin, and Mi
 ```bash
 # Start with Docker (recommended)
 docker compose up -d
+
+# Build
+docker-compose up -d --build
 
 # Start with Docker Compose Watch (Frontend auto-sync)
 # This will sync local changes to the container and rebuild on dependency changes
@@ -72,7 +69,6 @@ docker compose down -v
 
 # Cmd docker
 docker compose exec server sh/bash
-
 ```
 
 ### docker postgresql

@@ -27,11 +27,6 @@ module.exports = {
         allowNull: false,
       },
 
-      confirm_password: {
-        type: Sequelize.STRING(255),
-        allowNull: false,
-      },
-
       full_name: {
         type: Sequelize.STRING(255),
         allowNull: false,

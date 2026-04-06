@@ -87,23 +87,6 @@ paths:
                   message:
                     type: string
                     example: Unauthorized
-  /auth/profile:
-    get:
-      tags:
-        - Profile
-      summary: Lấy thông tin profile của người dùng hiện tại
-      description: "Trả về thông tin người dùng; yêu cầu header Authorization: Bearer &lt;token&gt;"
-      security:
-        - bearerAuth: []
-      responses:
-        "200":
-          description: Thông tin profile
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        "401":
-          $ref: '#/components/schemas/User'
 components:
   schemas:
     User:

@@ -4,7 +4,7 @@ import crypto from "crypto";
  * @param {string} token - Raw token to hash
  * @returns {string} Hashed token
  */
-const hashToken = (token: string) => {
+export const hashToken = (token: string) => {
   return crypto.createHash("sha256").update(token).digest("hex");
 };
 
@@ -12,11 +12,6 @@ const hashToken = (token: string) => {
  * Generate a random reset token
  * @returns {string} Random token
  */
-const generateRandomToken = () => {
+export const generateRandomToken = () => {
   return crypto.randomBytes(32).toString("hex");
-};
-
-export = {
-  hashToken,
-  generateRandomToken,
 };
