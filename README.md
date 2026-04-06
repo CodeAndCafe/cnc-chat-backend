@@ -88,8 +88,8 @@ ALTER USER <postgres_user> WITH PASSWORD 'postgres_password';
 
 Once the applications and containers are up and running, you can access the services here:
 
-- **Backend API**: <http://localhost:3000>
-- **Swagger Docs**: <http://localhost:3000/docs/>
+- **Backend API**: <http://localhost:8888>
+- **Swagger Docs**: <http://localhost:8888/docs/>
 - **pgAdmin**: <http://localhost:5050> (Database management tool)
 
 ## 💿 Seed Data & Database Migrations
