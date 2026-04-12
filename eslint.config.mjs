@@ -1,5 +1,6 @@
 import js from "@eslint/js";
 import tseslint from "typescript-eslint";
+import prettier from "eslint-config-prettier";
 
 export default [
   js.configs.recommended,
@@ -7,6 +8,8 @@ export default [
   {
     files: ["**/*.ts"],
     languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
       parser: tseslint.parser,
       parserOptions: {
         project: "./tsconfig.json",
@@ -16,9 +19,18 @@ export default [
   },
   {
     rules: {
+      /* ===== Node / Express ===== */
       "no-console": "off",
-      "no-unused-vars": "off",
       "no-undef": "off",
+
+      /* ===== TypeScript ===== */
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/no-explicit-any": "warn",
+
+      /* ===== Clean code ===== */
+      "prefer-const": "warn",
     },
   },
+  prettier,
 ];
