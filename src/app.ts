@@ -9,10 +9,10 @@ import morgan from "morgan";
 import i18next from "@/plugins/i18n";
 import { minioClient } from "@/configs/minio";
 import middleware from "i18next-http-middleware";
-import { errorMiddleware } from "./middlewares/error.middleware";
+import { errorMiddleware } from "@/shared/middlewares/error.middleware";
 import { SwaggerDocs } from "@/swagger";
-import { logger, stream } from "@/utils/logger";
-import { IRoutes } from "@/interfaces/routes.interface";
+import { logger, stream } from "@/shared/utils/logger";
+import { IRoutes } from "@/shared/interfaces/routes.interface";
 import {
   NODE_ENV,
   PORT,
@@ -39,19 +39,50 @@ export class App {
     this.initializeI18next();
     this.initializeRoutes(routes);
     this.initializeErrorHandling();
-    this.initializeMinio();
   }
+
   public listen() {
     this.app.listen(this.port, this.hostName, () => {
       logger.info(`=================================`);
       logger.info(`======= ENV: ${this.env} =======`);
-      logger.info(`🚀 App listening on the port ${this.port}`);
+      logger.info(`App listening on port ${this.port}`);
       logger.info(`=================================`);
     });
   }
 
   public getServer() {
     return this.app;
+  }
+
+  public async initializeMinio() {
+    try {
+      const exists = await minioClient.bucketExists(this.bucket);
+      if (!exists) {
+        await minioClient.makeBucket(this.bucket, "us-east-1");
+        logger.info(`MinIO bucket created: ${this.bucket}`);
+      } else {
+        logger.info(`MinIO bucket exists: ${this.bucket}`);
+      }
+
+      await minioClient.setBucketPolicy(
+        this.bucket,
+        JSON.stringify({
+          Version: "2012-10-17",
+          Statement: [
+            {
+              Effect: "Allow",
+              Principal: "*",
+              Action: ["s3:GetObject"],
+              Resource: [`arn:aws:s3:::${this.bucket}/*`],
+            },
+          ],
+        }),
+      );
+
+      logger.info("MinIO bucket policy set (public read)");
+    } catch (error) {
+      logger.error(`MinIO init error: ${error}`);
+    }
   }
 
   private initializeMiddlewares() {
@@ -81,36 +112,5 @@ export class App {
 
   private initializeI18next() {
     this.app.use(middleware.handle(i18next));
-  }
-
-  private async initializeMinio() {
-    try {
-      const exists = await minioClient.bucketExists(this.bucket);
-      if (!exists) {
-        await minioClient.makeBucket(this.bucket, "us-east-1");
-        console.log("Bucket created:", this.bucket);
-      } else {
-        console.log("Bucket exists:", this.bucket);
-      }
-
-      await minioClient.setBucketPolicy(
-        this.bucket,
-        JSON.stringify({
-          Version: "2012-10-17",
-          Statement: [
-            {
-              Effect: "Allow",
-              Principal: "*",
-              Action: ["s3:GetObject"],
-              Resource: [`arn:aws:s3:::${this.bucket}/*`],
-            },
-          ],
-        }),
-      );
-
-      console.log("Bucket policy set (public read)");
-    } catch (error) {
-      console.log("MinIO init error:", error);
-    }
   }
 }

@@ -6,6 +6,7 @@ import {
   MINIO_ACCESS_KEY,
   MINIO_SECRET_KEY,
 } from "@/configs/env";
+
 export const minioClient = new Client({
   endPoint: MINIO_HOST,
   port: Number(MINIO_PORT),
@@ -13,7 +14,3 @@ export const minioClient = new Client({
   accessKey: MINIO_ACCESS_KEY,
   secretKey: MINIO_SECRET_KEY,
 });
-(async () => {
-  const buckets = await minioClient.listBuckets();
-  console.log(buckets);
-})();
