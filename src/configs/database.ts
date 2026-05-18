@@ -1,4 +1,5 @@
 import { Sequelize } from "sequelize";
+import { logger } from "@/shared/utils/logger";
 
 import {
   POSTGRES_USER,
@@ -17,7 +18,7 @@ export const sequelize = new Sequelize({
   port: Number(POSTGRES_PORT),
   dialect: "postgres",
 
-  logging: NODE_ENV === "development" ? console.log : false,
+  logging: NODE_ENV === "development" ? (sql) => logger.debug(sql) : false,
 
   pool: {
     max: 10,
@@ -39,13 +40,9 @@ export const sequelize = new Sequelize({
 export const connectDatabase = async () => {
   try {
     await sequelize.authenticate();
-    console.log("✅ PostgreSQL connected");
-    // if (NODE_ENV === "development") {
-    //   await sequelize.sync({ alter: true });
-    //   console.log("✅ Models synced");
-    // }
+    logger.info("✅ PostgreSQL connected");
   } catch (error) {
-    console.error("❌ Database connection error:", error);
+    logger.error(`❌ Database connection error: ${error}`);
     process.exit(1);
   }
 };
