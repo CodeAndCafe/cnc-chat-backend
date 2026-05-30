@@ -8,12 +8,13 @@ export const {
   PORT,
   ACCESS_TOKEN_SECRET,
   REFRESH_TOKEN_SECRET,
-  LOG_FORMAT,
   LOG_DIR,
   ORIGIN,
   HOST_NAME,
   CLIENT_URL,
 } = process.env;
+
+export const LOG_FORMAT = process.env.LOG_FORMAT || "dev";
 // PostgreSQL
 export const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST, POSTGRES_PORT, POSTGRES_DB } =
   process.env;
